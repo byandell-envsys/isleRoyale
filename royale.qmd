@@ -170,7 +170,7 @@ fig, ax = plt.subplots()
 hex_grid.plot(ax=ax, color='none', edgecolor='blue')
 gdf.plot(ax=ax, color='none', edgecolor='black')
 
-ax.set_title('Hexagonal Grid Overlay')
+ax.set_title('Isle Royale with Hexagon Overlay')
 plt.savefig("isle_royale.png")
 plt.show()
 ```
