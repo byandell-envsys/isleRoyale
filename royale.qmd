@@ -146,6 +146,8 @@ from landmapy.plot import plot_gdf_state
 plot_gdf_state(new_gdf)
 ```
 
+## Python geohexgrid package
+
 ```{python}
 #| eval: false
 pip install geohexgrid
@@ -175,6 +177,133 @@ plt.savefig("isle_royale.png")
 plt.show()
 ```
 
+## Python h3 package
+
+This does not work yet.
+It seems the `polyfill()` may not be in `h3` any more.
+
 ```{python}
-help(plt.save())
+#| eval: false
+pip install h3
+```
+
+```{python}
+import h3
+from shapely.geometry import Polygon, Point
+
+# Define your geometry (example: a simple square polygon)
+geometry = Polygon([(0, 0), (0, 1), (1, 1), (1, 0)])
+
+# Define the resolution of the hexagons
+resolution = 9
+
+# Get the bounding box of the geometry
+minx, miny, maxx, maxy = geometry.bounds
+
+# Iterate over the bounding box and generate hexagons
+hexagons = set()
+for lat in range(int(miny * 1e6), int(maxy * 1e6), 10000):
+    for lng in range(int(minx * 1e6), int(maxx * 1e6), 10000):
+        hex_id = h3.latlng_to_cell(lat / 1e6, lng / 1e6, resolution)
+        hex_center = h3.cell_to_latlng(hex_id)
+        if geometry.contains(Point(hex_center[1], hex_center[0])):
+            hexagons.add(hex_id)
+
+# Print the hexagons
+print(hexagons)
+```
+
+```{python}
+new_gdf.crs
+```
+
+```{python}
+import h3
+import geopandas as gpd
+from shapely.geometry import Point
+
+gdf = new_gdf
+
+# Define the resolution of the hexagons
+resolution = 9
+
+# Iterate over the bounding box of the geometry and generate hexagons
+hexagons = set()
+for geometry in gdf.geometry:
+    print(geometry.bounds)
+    minx, miny, maxx, maxy = geometry.bounds
+    lat = miny
+    while lat <= maxy:
+        lng = minx
+        while lng <= maxx:
+            hex_id = h3.latlng_to_cell(lat, lng, resolution)
+            hex_center = h3.cell_to_latlng(hex_id)
+            if geometry.contains(Point(hex_center[1], hex_center[0])):
+                hexagons.add(hex_id)
+            lng += 0.1
+        lat += 0.1
+
+# Print the hexagons
+print(hexagons)
+```
+
+```{python}
+# Create a GeoDataFrame for the hexagons
+hex_geometries = [Polygon(h3.cell_to_boundary(h)) for h in hexagons]
+hex_gdf = gpd.GeoDataFrame({'geometry': hex_geometries}, crs="EPSG:4269")
+
+# Plot the GeoDataFrame and the hexagons
+fig, ax = plt.subplots(figsize=(100,5))
+gdf.boundary.plot(ax=ax, color='blue')
+hex_gdf.boundary.plot(ax=ax, color='red')
+plt.show()
+```
+
+```{python}
+hex_gdf.plot()
+```
+
+`h3.polyfill()` not found
+
+```{python}
+#| eval: false
+import geopandas as gpd
+import h3
+import matplotlib.pyplot as plt
+from shapely.geometry import Polygon, mapping
+
+# Load your GeoDataFrame (replace with your actual file path)
+gdf = new_gdf
+
+# Function to convert H3 hexagons to Shapely polygons
+def h3_to_polygon(h3_index):
+    boundary = h3.h3_to_geo_boundary(h3_index)
+    return Polygon([(lon, lat) for lat, lon in boundary])
+
+# Create a hexagonal grid with a resolution that approximates a 10 km radius
+resolution = 6  # Adjust resolution as needed
+hexagons = set()
+
+# Iterate over the GeoDataFrame and generate hexagons
+for geom in gdf.geometry:
+    if geom.is_empty:
+        continue
+    # Convert the geometry to GeoJSON
+    geojson_geom = mapping(geom)
+    # Generate hexagons within the geometry
+    hexagons.update(h3.polyfill(geojson_geom, resolution))
+
+# Convert hexagons to Shapely polygons
+hex_polygons = [h3_to_polygon(h) for h in hexagons]
+
+# Create a GeoDataFrame for the hexagons
+hex_gdf = gpd.GeoDataFrame(geometry=hex_polygons)
+
+# Plot the GeoDataFrame and the hexagonal grid
+fig, ax = plt.subplots()
+gdf.plot(ax=ax, color='lightgrey', edgecolor='black')  # Plot the GeoDataFrame
+hex_gdf.plot(ax=ax, color='none', edgecolor='blue')   # Overlay the hexagonal grid
+
+ax.set_title('Hexagonal Grid Overlay')
+plt.show()
 ```
