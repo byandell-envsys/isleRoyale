@@ -27,3 +27,5 @@ Hexagonal Grid References
 - [Using camera traps and N-mixture models to estimate population abundance: Model selection really matters](https://doi.org/10.1111/2041-210X.14320)
 - [dggridR](https://cran.r-project.org/web/packages/dggridR/vignettes/dggridR.html)
 - [geohexgrid](https://github.com/mrcagney/geohexgrid)
+- [h3](https://pypi.org/project/h3/)
+  - [h3 Uber Notebooks](https://github.com/uber/h3-py-notebooks)
