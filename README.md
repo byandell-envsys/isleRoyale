@@ -18,7 +18,8 @@ Isle Royale Ethology
 
 Hexagonal Grid References
 
-- [Wikipedia](https://en.wikipedia.org/wiki/Hydrological_code)
+- [Hydrological Unit Codes (HUCs) Explained](https://nas.er.usgs.gov/hucs.aspx)
+- [Wikipedia: Hydrological Codes](https://en.wikipedia.org/wiki/Hydrological_code)
 - [Hexagonal units used in the terrestrial model by George R Robinson](https://www.researchgate.net/figure/Hexagonal-units-used-in-the-terrestrial-model-The-smaller-hexagons-each-marked-with-its_fig1_308173131)
 -  Environmental Monitoring and Assessment Program (EMAP) hexagon grid (Spence and White 1992).
 -  [EPA 40km Hexagons for Conterminous United States](https://www.sciencebase.gov/catalog/item/5ba9378fe4b08583a5ca0937)
