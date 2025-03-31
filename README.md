@@ -30,3 +30,4 @@ Hexagonal Grid References
 - [geohexgrid](https://github.com/mrcagney/geohexgrid)
 - [h3](https://pypi.org/project/h3/)
   - [h3 Uber Notebooks](https://github.com/uber/h3-py-notebooks)
+  - [h3 grid for San Diego](https://geographicdata.science/book/data/h3_grid/build_sd_h3_grid.html)
