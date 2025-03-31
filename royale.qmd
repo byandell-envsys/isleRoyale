@@ -1,0 +1,195 @@
+# Isle Royale Wolf and Moose
+
+- [Wolf & Moose Populations (2019)](https://www.nps.gov/isro/learn/nature/wolf-moose-populations.htm)
+- [Wolf Population Stabilizes, Moose Decline Slows (2024)](https://www.mtu.edu/news/2024/04/wolf-population-stabilizes-moose-decline-slows.html)
+- [Annual Reports of the Wolf-Moose Project](https://www.isleroyalewolf.org/annual-reports)
+- <https://isleroyalewolf.org>
+- [Rolf O. Peterson, Res Prof, CFRES, MI Tech U](https://www.mtu.edu/forest/about/faculty-staff/faculty/peterson/)
+- [Isle Royale Interactive Hiking Map](https://isle-royale-map.firebaseapp.com/) ([GitHub](https://github.com/brandontrowe/isle-royale-interactive-map?tab=readme-ov-file))
+- [Multivariate Auto-Regressive(1) State-Space (MARSS) R package](https://atsa-es.github.io/MARSS/):
+  - [Isle Royale Wolf and Moose Data](https://atsa-es.github.io/MARSS/reference/isleRoyal.html): `data(isleRoyale)`
+- [Myles Walimaa](https://mwalimaa.github.io/portfolio/)
+- [Simulations of deleterious variation in gray wolves (Jacqueline Robinson)](https://github.com/jarobin/wolf_demography_2019)
+- [Dynamic structural equation models (R/dsem, James Thorson, NOAA)](https://github.com/James-Thorson-NOAA/dsem)
+  - [Data 1959-2019](https://github.com/James-Thorson-NOAA/dsem/tree/main/data-raw)
+(also in RDA)
+  - Thorson, J. T., Andrews, A. G., Essington, T., & Large, S. (2024). Dynamic structural equation models synthesize ecosystem dynamics constrained by ecological mechanisms. Methods in Ecology and Evolution 15(4): 744-755. [DOI:10.1111/2041-210X.14289](https://doi.org/10.1111/2041-210X.14289)
+
+```{python}
+#| eval: false
+pip install --quiet ~/Documents/GitHub/landmapy
+```
+
+```{python}
+from landmapy.initial import robust_code
+
+robust_code()
+```
+
+```{python}
+from landmapy.reflect import read_delta_gdf
+from landmapy.plot import plot_delta_gdf
+```
+
+Following is kept here for the moment and will be removed next week.
+
+```{python}
+# Isle Royale: '041800000101'
+# Lake Mendota: '070900020604'
+# Lake Monona: '070900020702'
+# Mississippi Delta: '080902030506'
+royale_gdf = read_delta_gdf(huc_region='04', watershed='041800000101',
+    dissolve=False, func_key='wbd_04', override=False)
+plot_delta_gdf(royale_gdf)
+```
+
+```{python}
+from shapely.geometry import MultiPolygon, Polygon
+
+# Example MultiPolygon
+poly1 = Polygon([(0, 0), (1, 1), (1, 0)])
+poly2 = Polygon([(2, 2), (3, 3), (3, 2)])
+multi_poly = MultiPolygon([poly1, poly2])
+
+# Find out how many polygons are in the MultiPolygon
+len(multi_poly.geoms)
+```
+
+```{python}
+multi_poly.geoms[0]
+```
+
+```{python}
+from shapely.geometry import MultiPolygon
+
+# Example MultiPolygon (replace this with your actual MultiPolygon object)
+x = MultiPolygon([Polygon([(-88.422650, 41.824000), (-88.422700, 41.824050), (-88.422750, 41.824100), (-88.422650, 41.824000)])])
+
+# Extract the first polygon
+first_polygon = x.geoms[0]
+
+print(first_polygon)
+
+# Print the type of the first polygon
+print(first_polygon.geom_type)
+
+# Print the coordinates of the first polygon
+print(list(first_polygon.exterior.coords))
+
+# Print the area of the first polygon
+print(first_polygon.area)
+```
+
+```{python}
+poly = royale_gdf['geometry']
+print(poly)
+y = poly.apply(lambda geom: len(geom.geoms) if geom.geom_type == 'MultiPolygon' else 1)
+print(y)
+x = poly.apply(lambda geom: geom.geoms if geom.geom_type == 'MultiPolygon' else 1)
+len(x)
+print(x)
+```
+
+```{python}
+first_multi_polygon = poly.iloc[0]
+
+# Iterate over the GeometrySequence to access individual polygons
+for idx, polygon in enumerate(first_multi_polygon.geoms):
+    print(f'Polygon {idx}: {polygon}')
+    print(polygon)
+    break
+```
+
+```{python}
+for idx, polygon in enumerate(first_multi_polygon.geoms):
+    print(f'Polygon {idx}:')
+    print(f'  Type: {polygon.geom_type}')
+    print(f'  Coordinates: {list(polygon.exterior.coords)}')
+    print(f'  Area: {polygon.area}')
+    break
+```
+
+Plot Isle Royale (the first polygon)
+
+```{python}
+import matplotlib.pyplot as plt
+
+poly = royale_gdf['geometry']
+first_multi_polygon = poly.iloc[0]
+
+# Extract the first polygon
+first_polygon = first_multi_polygon.geoms[0]
+
+# Plot the polygon
+fig, ax = plt.subplots()
+x, y = first_polygon.exterior.xy
+ax.plot(x, y, color='blue')
+
+ax.set_title('First Polygon from MultiPolygon')
+ax.set_xlabel('Longitude')
+ax.set_ylabel('Latitude')
+plt.show()
+```
+
+Extract first polygon as its own GDF.
+
+```{python}
+import geopandas as gpd
+
+# Function to extract the first polygon from a MultiPolygon
+def extract_first_polygon(geometry):
+    if geometry.geom_type == 'MultiPolygon':
+        return geometry.geoms[0]
+    return geometry
+
+# Apply the function to the geometry column
+gdf = royale_gdf
+gdf['geometry'] = gdf['geometry'].apply(extract_first_polygon)
+
+# Create a new GeoDataFrame with the extracted polygons
+new_gdf = gpd.GeoDataFrame(gdf, geometry='geometry')
+
+# Save or use the new GeoDataFrame
+#new_gdf.to_file('path_to_new_file.shp')
+
+new_gdf
+```
+
+```{python}
+from landmapy.plot import plot_gdf_state
+
+plot_gdf_state(new_gdf)
+```
+
+```{python}
+#| eval: false
+pip install geohexgrid
+```
+
+Example Code
+Here's an example of how to create a hexagonal grid that covers a GeoDataFrame:
+
+
+```{python}
+import geopandas as gpd
+import geohexgrid as ghg
+import matplotlib.pyplot as plt
+
+gdf = new_gdf
+
+# Create a hexagonal grid with a specified circumradius (e.g., 1 kilometers)
+hex_grid = ghg.make_grid_from_gdf(gdf, R=0.01)
+
+# Plot the GeoDataFrame and the hexagonal grid
+fig, ax = plt.subplots()
+hex_grid.plot(ax=ax, color='none', edgecolor='blue')
+gdf.plot(ax=ax, color='none', edgecolor='black')
+
+ax.set_title('Hexagonal Grid Overlay')
+plt.savefig("isle_royale.png")
+plt.show()
+```
+
+```{python}
+help(plt.save())
+```
