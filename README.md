@@ -24,7 +24,7 @@ Hexagonal Grid References
 -  Environmental Monitoring and Assessment Program (EMAP) hexagon grid (Spence and White 1992).
 -  [EPA 40km Hexagons for Conterminous United States](https://www.sciencebase.gov/catalog/item/5ba9378fe4b08583a5ca0937)
    - [EPA_Hexagons_40km Shapefile](https://www.sciencebase.gov/catalog/item/5ba9378fe4b08583a5ca0937#:~:text=161.01%20KB-,EPA_Hexagons_40km,-.shp) 
-- [Bousquin J. Discrete Global Grid Systems as scalable geospatial frameworks for characterizing coastal environments. Environ Model Softw. 2021 Dec 1;146:1-14. doi: 10.1016/j.envsoft.2021.105210. PMID: 35355513; PMCID: PMC8958999.](https://doi.org/10.1016/j.envsoft.2021.105210)
+- Bousquin J (2021) Discrete Global Grid Systems as scalable geospatial frameworks for characterizing coastal environments. Environ Model Softw. 146: 1-14. [doi: 10.1016/j.envsoft.2021.105210](https://doi.org/10.1016/j.envsoft.2021.105210).
 - [Using camera traps and N-mixture models to estimate population abundance: Model selection really matters](https://doi.org/10.1111/2041-210X.14320)
 - [dggridR](https://cran.r-project.org/web/packages/dggridR/vignettes/dggridR.html)
 - [geohexgrid](https://github.com/mrcagney/geohexgrid)
