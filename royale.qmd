@@ -102,6 +102,10 @@ new_gdf
 ```
 
 ```{python}
+new_gdf.to_file("data/isleroyale.shp")
+```
+
+```{python}
 plot_delta_gdf(new_gdf)
 ```
 

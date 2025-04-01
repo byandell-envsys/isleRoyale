@@ -42,7 +42,7 @@ plot(sf::st_geometry(gdf), col = 'lightblue', main = "Hex Grid Overlay")
 plot(sf::st_geometry(hex_sf), add = TRUE, border = 'red')
 ```
 
-## Second Try
+## Hex Overlay on Island
 
 ```{r warning=FALSE}
 # Create a hexagonal grid that covers the entire extent of your GeoDataFrame:

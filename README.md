@@ -15,7 +15,9 @@ Isle Royale Ethology
   - [Data 1959-2019](https://github.com/James-Thorson-NOAA/dsem/tree/main/data-raw)
 (also in RDA)
   - Thorson, J. T., Andrews, A. G., Essington, T., & Large, S. (2024). Dynamic structural equation models synthesize ecosystem dynamics constrained by ecological mechanisms. Methods in Ecology and Evolution 15(4): 744-755. [DOI:10.1111/2041-210X.14289](https://doi.org/10.1111/2041-210X.14289)
-
+- [Shoreline Mapping Program of Isle Royale (NOAA)](https://www.fisheries.noaa.gov/inport/item/60936)
+  - <https://nsde.ngs.noaa.gov/>
+  
 Hexagonal Grid References
 
 - [Hydrological Unit Codes (HUCs) Explained](https://nas.er.usgs.gov/hucs.aspx)
