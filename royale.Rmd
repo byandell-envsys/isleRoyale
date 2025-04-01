@@ -1,0 +1,70 @@
+royale.Rmd
+
+---
+title: "royale"
+author: "Brian Yandell"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+# Create a dggridR object
+dggs <- dggridR::dgconstruct(res = 15)  # Adjust the resolution as needed
+# Read your GeoDataFrame
+gdf <- sf::st_read("data/isleroyale.shp")  # Replace with your file path
+```
+
+```{r}
+plot(sf::st_geometry(gdf), col = 'lightblue', main = "Isle Royale Polygon")
+```
+
+### Hex overlay on boundary
+
+```{r}
+# Convert the GeoDataFrame to a data frame with coordinates
+gdf_coords <- sf::st_coordinates(gdf)
+# Generate hexagonal grid cells
+cell <- dggridR::dgGEO_to_SEQNUM(dggs,
+    gdf_coords[,1], gdf_coords[,2])$seqnum
+# Create a spatial object for the hex grid
+hex_grid <- dggridR::dgcellstogrid(dggs, unique(cell))
+# Convert the hex grid to an sf object
+hex_sf <- sf::st_as_sf(hex_grid)
+```
+
+```{r}
+# Plot the GeoDataFrame with the hex grid overlay:
+plot(sf::st_geometry(gdf), col = 'lightblue', main = "Hex Grid Overlay")
+plot(sf::st_geometry(hex_sf), add = TRUE, border = 'red')
+```
+
+## Second Try
+
+```{r warning=FALSE}
+# Create a hexagonal grid that covers the entire extent of your GeoDataFrame:
+hex_grid <- sf::st_make_grid(gdf, cellsize = .02, square = FALSE)
+# Convert the hex grid to an sf object:
+hex_sf <- sf::st_sf(geometry = hex_grid)
+# Intersect hex grid with GeoDataFrame to keep only the hexagons that fall within your area
+#hex_intersect <- hex_sf[sf::st_intersects(hex_sf, gdf, sparse = FALSE),]
+# Use st_intersects to get the indices of intersecting hexagons
+intersect_indices <- which(lengths(sf::st_intersects(hex_sf, gdf)) > 0)
+
+# Subset the hex grid using these indices
+hex_intersect <- hex_sf[intersect_indices, ]
+```
+
+```{r}
+plot(sf::st_geometry(hex_intersect), border = 'red')
+```
+
+```{r}
+# Plot the GeoDataFrame with the hex grid overlay:
+plot(sf::st_geometry(gdf), col = 'lightblue', main = "Hex Grid Overlay")
+plot(sf::st_geometry(hex_intersect), add = TRUE, border = 'red')
+```
+

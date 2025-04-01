@@ -16,8 +16,6 @@ from landmapy.reflect import read_delta_gdf
 from landmapy.plot import plot_delta_gdf
 ```
 
-Following is kept here for the moment and will be removed next week.
-
 ```{python}
 # Isle Royale: '041800000101'
 # Lake Mendota: '070900020604'
@@ -26,43 +24,6 @@ Following is kept here for the moment and will be removed next week.
 royale_gdf = read_delta_gdf(huc_region='04', watershed='041800000101',
     dissolve=False, func_key='wbd_04', override=False)
 plot_delta_gdf(royale_gdf)
-```
-
-```{python}
-from shapely.geometry import MultiPolygon, Polygon
-
-# Example MultiPolygon
-poly1 = Polygon([(0, 0), (1, 1), (1, 0)])
-poly2 = Polygon([(2, 2), (3, 3), (3, 2)])
-multi_poly = MultiPolygon([poly1, poly2])
-
-# Find out how many polygons are in the MultiPolygon
-len(multi_poly.geoms)
-```
-
-```{python}
-multi_poly.geoms[0]
-```
-
-```{python}
-from shapely.geometry import MultiPolygon
-
-# Example MultiPolygon (replace this with your actual MultiPolygon object)
-x = MultiPolygon([Polygon([(-88.422650, 41.824000), (-88.422700, 41.824050), (-88.422750, 41.824100), (-88.422650, 41.824000)])])
-
-# Extract the first polygon
-first_polygon = x.geoms[0]
-
-print(first_polygon)
-
-# Print the type of the first polygon
-print(first_polygon.geom_type)
-
-# Print the coordinates of the first polygon
-print(list(first_polygon.exterior.coords))
-
-# Print the area of the first polygon
-print(first_polygon.area)
 ```
 
 ```{python}
@@ -141,9 +102,11 @@ new_gdf
 ```
 
 ```{python}
-from landmapy.plot import plot_gdf_state
+plot_delta_gdf(new_gdf)
+```
 
-plot_gdf_state(new_gdf)
+```{python}
+new_gdf.bounds
 ```
 
 ## Python geohexgrid package
@@ -211,10 +174,6 @@ for lat in range(int(miny * 1e6), int(maxy * 1e6), 10000):
 
 # Print the hexagons
 print(hexagons)
-```
-
-```{python}
-new_gdf.crs
 ```
 
 ```{python}

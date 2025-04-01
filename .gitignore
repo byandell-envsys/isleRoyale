@@ -174,3 +174,5 @@ data/
 
 *.html
 *.pdf
+.Rproj.user
+*.Rproj
